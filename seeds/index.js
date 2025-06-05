@@ -22,7 +22,7 @@ const getUnsplashImages = async () => {
         Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
       },
     });
-    return response.data.map(image => `${image.urls.raw}&w=400&h=400&fit=crop`); // Solo devolvemos las URLs de las imágenes
+    return response.data.map(image => `${image.urls.raw}&w=300&h=300&fit=crop`); // Solo devolvemos las URLs de las imágenes
   } catch (error) {
     console.error('Error fetching images from Unsplash:', error);
   }
@@ -36,7 +36,7 @@ const seedDB = async () => {
   await Campground.deleteMany({});
 
   // Crea nuevos campamentos con imágenes de Unsplash
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 300; i++) {
     const price = Math.floor(Math.random() * 20) + 10;
     const randomIndex = Math.floor(Math.random() * cities.length); // Generar índice aleatorio
     const image = images.length > 0 ? images[i % images.length] : 'URL_IMAGEN_POR_DEFECTO';
@@ -44,9 +44,22 @@ const seedDB = async () => {
       author : '67c4c263334ea4566884bc37',
       location: `${cities[randomIndex].city}, ${cities[randomIndex].state}`, // Usamos las ciudades de la colección
       title: `${sample(descriptors)} ${sample(places)}`, // Usamos los adjetivos y lugares de la colección
-      image: images[i % images.length], // Usamos las imágenes de la colección
+      //image: images[i % images.length], // Usamos las imágenes de la colección
       description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolores vero perferendis laudantium, consequuntur voluptatibus nulla architecto, sit soluta esse iure sed labore ipsam a cum nihil atque molestiae deserunt!',
       price,
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          cities[randomIndex].longitude, // Longitud de la ciudad
+          cities[randomIndex].latitude // Latitud de la ciudad
+        ]
+      },
+      images: [
+        {
+          url: image,
+          filename: 'YelpCamp/seedImage'
+        }
+      ]
     });
     await camp.save();
   }
