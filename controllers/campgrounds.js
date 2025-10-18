@@ -5,15 +5,13 @@ const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const { cloudinary } = require('../cloudinary');
 
 module.exports.index = async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', { campgrounds,
-        mapboxToken: process.env.MAPBOX_TOKEN
-     });
-}
+  const campgrounds = await Campground.find({}).lean({ virtuals: true, getters: true });
+  res.render('campgrounds/index', { campgrounds, mapboxToken: process.env.MAPBOX_TOKEN });
+};
 
 module.exports.renderNewForm = (req, res) => {
     res.render('campgrounds/new');
-}
+};
 
 module.exports.createCampground = async (req, res, next) => {
     const geoData = await geocoder.forwardGeocode({
@@ -31,12 +29,9 @@ module.exports.createCampground = async (req, res, next) => {
 }
 
 module.exports.showCampground = async (req, res,) => {
-    const campground = await Campground.findById(req.params.id).populate({
-      path: 'reviews',
-      populate: {
-        path: 'author'
-      }
-    }).populate('author');
+    const campground = await Campground.findById(req.params.id)
+      .populate({ path: 'reviews', populate: {path: 'author'}})
+      .populate('author');
     if (!campground) {
         req.flash('error', 'Cannot find that campground!');
         return res.redirect('/campgrounds');

@@ -73,7 +73,7 @@ const sessionConfig = {
 
 app.use(session(sessionConfig))
 app.use(flash());
-app.use(helmet({contentSecurityPolicy: false}));
+
 
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
@@ -98,8 +98,12 @@ const connectSrcUrls = [
     "https://a.tiles.mapbox.com/",
     "https://b.tiles.mapbox.com/",
     "https://events.mapbox.com/",
+    "https://cdn.jsdelivr.net/",
 ];
-const fontSrcUrls = [];
+const fontSrcUrls = [
+    "https://fonts.googleapis.com/",
+     "https://fonts.gstatic.com/"
+];
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
@@ -113,8 +117,8 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/dd0pvrj1q/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
-                "https://images.unsplash.com/",
+                "https://res.cloudinary.com", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com",
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },

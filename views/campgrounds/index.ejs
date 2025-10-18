@@ -8,15 +8,17 @@
         <div class="card mb-3">
           <div class="row">
             <div class="col-md-4">
-              <% if (campground.images.length) { %>
-              <img class="image-fluid" src="<%= campground.images[0].url %>" alt="">
-              <% }else {%>
-                <img class="image-fluid" src="https://images.unsplash.com/photo-1556191327-74de5f9921db?ixid=M3w3MDg1Njl8MHwxfGNvbGxlY3Rpb258Mnw4ODYyMzA2fHx8fHwyfHwxNzQ4NjQwNTQ2fA&ixlib=rb-4.1.0&w=300&h=300&fit=crop">
-              <%} %>
+              <% if (campground.images && campground.images.length) { %>
+                <img class="img-fluid"
+                    src="<%= campground.images[0].thumbnail || campground.images[0].url %>"
+                    alt="campground image">
+              <% } else { %>
+                <img class="img-fluid" src="https://images.unsplash.com/photo-1556191327-74de5f9921db?w=300&h=300&fit=crop" alt="fallback">
+              <% } %>
             </div>
             <div class="col-md-8">
-              <div class="card=body">
-                <h5 class="card-tilte"><%= campground.title %></h5>
+              <div class="card-body">
+                <h5 class="card-title"><%= campground.title %></h5>
                 <p class="card-text"><%= campground.description %></p>
                 <p class="card-text">
                   <small class="text-muted"><%= campground.location  %></small>
@@ -27,8 +29,28 @@
           </div>
         </div>
       <% }%> 
+      <% if (campgrounds && campgrounds.length > 0) { %>
       <script>
         const mapToken = "<%= mapboxToken %>";
-        const campgrounds = {features: <%- JSON.stringify(campgrounds) %>};
-      </script>
-      <script src="/javascripts/clusterMap.js"></script>
+
+        // Armamos un GeoJSON válido para Mapbox
+        const campgrounds = {
+          type: "FeatureCollection",
+          features: <%- JSON.stringify(
+            campgrounds.map(cg => ({
+              type: "Feature",
+              geometry: cg.geometry, // { type: 'Point', coordinates: [lng, lat] }
+              properties: {
+                // usa tu virtual si existe; si no, un fallback simple
+                popUpMarkup: (cg.properties && cg.properties.popUpMarkup) 
+                              ? cg.properties.popUpMarkup 
+                              : `<strong>${cg.title}</strong><div>$${cg.price || ''}/night</div>`,
+                id: cg._id
+              } 
+            }))
+          ) %>
+      };
+</script>
+<% } %>
+<script src="/javascripts/clusterMap.js"></script>
+
