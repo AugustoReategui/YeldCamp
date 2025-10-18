@@ -66,3 +66,69 @@ Built with **Node.js**, **Express**, **MongoDB**, **EJS**, and deployed on **Her
 ```bash
 git clone https://github.com/AugustoReategui/yeldcamp.git
 cd yeldcamp
+
+2️⃣ Install dependencies
+npm install
+
+3️⃣ Create a .env file
+
+Add your credentials in the root directory:
+
+DB_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/yeldcamp
+CLOUDINARY_CLOUD_NAME=<your_cloud_name>
+CLOUDINARY_KEY=<your_key>
+CLOUDINARY_SECRET=<your_secret>
+MAPBOX_TOKEN=<your_token>
+SECRET=thisshouldbeabettersecret
+
+4️⃣ Run the app
+
+Development mode:
+
+nodemon app.js
+
+
+or production mode:
+
+node app.js
+
+
+Then visit 👉 http://localhost:3000
+
+📂 Project Structure
+├── app.js
+├── models/
+│   ├── campground.js
+│   ├── review.js
+│   └── user.js
+├── routes/
+│   ├── campgrounds.js
+│   ├── reviews.js
+│   └── users.js
+├── controllers/
+│   ├── campgrounds.js
+│   ├── reviews.js
+│   └── users.js
+├── public/
+│   ├── javascripts/
+│   │   ├── clusterMap.js
+│   │   └── showPageMap.js
+│   └── stylesheets/
+├── views/
+│   ├── campgrounds/
+│   ├── reviews/
+│   ├── users/
+│   └── layouts/
+└── .env, package.json, middleware.js, etc.
+
+
+👨‍💻 Author
+
+Augusto Reategui
+💻 Software Engineer @ Rambox
+
+📍 Rosario, Santa Fe, Argentina
+📧 augustoreategui@gmail.com
+
+💼 LinkedIn https://www.linkedin.com/in/augusto-reategui/
+
